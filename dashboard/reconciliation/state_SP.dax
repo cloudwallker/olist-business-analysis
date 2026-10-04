@@ -1,0 +1,23 @@
+EVALUATE
+CALCULATETABLE(ROW(
+    "gmv", [GMV],
+    "delivered_orders", [Delivered_Orders],
+    "aov", [AOV],
+    "all_orders", [All_Orders],
+    "canceled_orders", [Canceled_Orders],
+    "cancel_rate", [Cancel_Rate],
+    "delivery_orders", [Delivery_Orders],
+    "late_orders", [Late_Orders],
+    "late_rate", [Late_Rate],
+    "review_orders", [Review_Orders],
+    "low_score_orders", [Low_Score_Orders],
+    "low_score_rate", [Low_Score_Rate],
+    "joint_orders", [Joint_Orders],
+    "delivery_coverage", [Delivery_Coverage],
+    "review_coverage", [Review_Coverage],
+    "joint_coverage", [Joint_Coverage],
+    "p50_days", [P50_Days],
+    "p90_days", [P90_Days],
+    "duration_orders", [Duration_Orders],
+    "duration_coverage", [Duration_Coverage]
+), TREATAS({"SP"}, dim_customer_state[customer_state]))

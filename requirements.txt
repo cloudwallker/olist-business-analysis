@@ -1,0 +1,6 @@
+duckdb==1.4.5
+PyYAML==6.0.3
+matplotlib==3.9.4
+reportlab==5.0.1
+pandas==2.3.3
+

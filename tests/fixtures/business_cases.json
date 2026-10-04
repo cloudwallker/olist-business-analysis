@@ -1,0 +1,47 @@
+{
+  "orders": [
+    {"order_id":"multi", "customer_id":"c1", "order_status":"delivered", "order_purchase_timestamp":"2017-01-01 10:00:00", "order_delivered_customer_date":"2017-01-05 18:00:00", "order_estimated_delivery_date":"2017-01-05 00:00:00"},
+    {"order_id":"missing_dates", "customer_id":"c2", "order_status":"delivered", "order_purchase_timestamp":"2017-01-02 10:00:00"},
+    {"order_id":"canceled", "customer_id":"c3", "order_status":"canceled", "order_purchase_timestamp":"2017-01-03 10:00:00"},
+    {"order_id":"late", "customer_id":"c4", "order_status":"delivered", "order_purchase_timestamp":"2017-03-01 10:00:00", "order_delivered_customer_date":"2017-03-10 10:00:00", "order_estimated_delivery_date":"2017-03-09 23:59:59"},
+    {"order_id":"on_time", "customer_id":"c5", "order_status":"delivered", "order_purchase_timestamp":"2017-03-02 10:00:00", "order_delivered_customer_date":"2017-03-07 10:00:00", "order_estimated_delivery_date":"2017-03-08 00:00:00"},
+    {"order_id":"april", "customer_id":"c6", "order_status":"delivered", "order_purchase_timestamp":"2017-04-01 10:00:00", "order_delivered_customer_date":"2017-04-09 10:00:00", "order_estimated_delivery_date":"2017-04-07 00:00:00"}
+  ],
+  "items": [
+    {"order_id":"multi", "order_item_id":"1", "product_id":"book", "price":"100.00", "freight_value":"10.00"},
+    {"order_id":"multi", "order_item_id":"2", "product_id":"unknown", "price":"50.00", "freight_value":"5.00"},
+    {"order_id":"missing_dates", "order_item_id":"1", "product_id":"book", "price":"50.00", "freight_value":"5.00"},
+    {"order_id":"late", "order_item_id":"1", "product_id":"book", "price":"200.00", "freight_value":"20.00"},
+    {"order_id":"on_time", "order_item_id":"1", "product_id":"electronics", "price":"100.00", "freight_value":"10.00"},
+    {"order_id":"april", "order_item_id":"1", "product_id":"unknown", "price":"400.00", "freight_value":"40.00"}
+  ],
+  "payments": [
+    {"order_id":"multi", "payment_sequential":"1", "payment_type":"credit_card", "payment_installments":"1", "payment_value":"100.00"},
+    {"order_id":"multi", "payment_sequential":"2", "payment_type":"voucher", "payment_installments":"1", "payment_value":"65.00"}
+  ],
+  "customers": [
+    {"customer_id":"c1", "customer_unique_id":"u1", "customer_state":"SP"},
+    {"customer_id":"c2", "customer_unique_id":"u2", "customer_state":"SP"},
+    {"customer_id":"c3", "customer_unique_id":"u3", "customer_state":"SP"},
+    {"customer_id":"c4", "customer_unique_id":"u4", "customer_state":"RJ"},
+    {"customer_id":"c5", "customer_unique_id":"u5", "customer_state":"RJ"},
+    {"customer_id":"c6", "customer_unique_id":"u6", "customer_state":""}
+  ],
+  "products": [
+    {"product_id":"book", "product_category_name":"livros"},
+    {"product_id":"electronics", "product_category_name":"eletronicos"},
+    {"product_id":"unknown", "product_category_name":""}
+  ],
+  "reviews": [
+    {"review_id":"older", "order_id":"multi", "review_score":"5", "review_creation_date":"2017-01-06 00:00:00", "review_answer_timestamp":"2017-01-06 10:00:00"},
+    {"review_id":"b", "order_id":"multi", "review_score":"2", "review_creation_date":"2017-01-07 00:00:00", "review_answer_timestamp":"2017-01-08 10:00:00"},
+    {"review_id":"a", "order_id":"multi", "review_score":"1", "review_creation_date":"2017-01-07 00:00:00", "review_answer_timestamp":"2017-01-08 10:00:00"},
+    {"review_id":"late_review", "order_id":"late", "review_score":"2", "review_creation_date":"2017-03-10 00:00:00", "review_answer_timestamp":"2017-03-11 10:00:00"},
+    {"review_id":"early_review", "order_id":"on_time", "review_score":"1", "review_creation_date":"2017-03-03 00:00:00", "review_answer_timestamp":"2017-03-04 10:00:00"},
+    {"review_id":"missing_answer", "order_id":"april", "review_score":"5", "review_creation_date":"2017-04-10 00:00:00"}
+  ],
+  "category_translation": [
+    {"product_category_name":"livros", "product_category_name_english":"books"},
+    {"product_category_name":"eletronicos", "product_category_name_english":"electronics"}
+  ]
+}

@@ -1,0 +1,568 @@
+{
+  "name": "Olist",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "sourceQueryCulture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "tables": [
+      {
+        "name": "fact_orders",
+        "columns": [
+          {
+            "name": "customer_state",
+            "dataType": "string",
+            "sourceColumn": "customer_state",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "order_status",
+            "dataType": "string",
+            "sourceColumn": "order_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "purchase_date",
+            "dataType": "dateTime",
+            "sourceColumn": "purchase_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-MM-dd",
+            "annotations": [
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ]
+          },
+          {
+            "name": "merchandise_value",
+            "dataType": "decimal",
+            "sourceColumn": "merchandise_value",
+            "summarizeBy": "none",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "delivery_days",
+            "dataType": "double",
+            "sourceColumn": "delivery_days",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "delivery_eligible",
+            "dataType": "boolean",
+            "sourceColumn": "delivery_eligible",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "is_late",
+            "dataType": "boolean",
+            "sourceColumn": "is_late",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_score",
+            "dataType": "int64",
+            "sourceColumn": "review_score",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_eligible",
+            "dataType": "boolean",
+            "sourceColumn": "review_eligible",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "review_before_delivery",
+            "dataType": "boolean",
+            "sourceColumn": "review_before_delivery",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "delay_group",
+            "dataType": "string",
+            "sourceColumn": "delay_group",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_orders",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"/fact_orders.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Nulls = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),",
+                "    Typed = Table.TransformColumnTypes(Nulls, {{\"customer_state\", type text}, {\"order_status\", type text}, {\"purchase_date\", type date}, {\"merchandise_value\", Currency.Type}, {\"delivery_days\", type number}, {\"delivery_eligible\", type logical}, {\"is_late\", type logical}, {\"review_score\", Int64.Type}, {\"review_eligible\", type logical}, {\"review_before_delivery\", type logical}, {\"delay_group\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "GMV",
+            "expression": "COALESCE(CALCULATE(SUM(fact_orders[merchandise_value]), fact_orders[order_status] = \"delivered\"), 0)",
+            "formatString": "#,0.00",
+            "displayFolder": "经营",
+            "description": "已交付商品金额；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Delivered_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\"), 0)",
+            "formatString": "#,0",
+            "displayFolder": "经营",
+            "description": "已交付订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "AOV",
+            "expression": "DIVIDE([GMV], [Delivered_Orders])",
+            "formatString": "#,0.00",
+            "displayFolder": "经营",
+            "description": "商品客单价；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "All_Orders",
+            "expression": "COALESCE(COUNTROWS(fact_orders), 0)",
+            "formatString": "#,0",
+            "displayFolder": "经营",
+            "description": "窗口全部订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Canceled_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"canceled\"), 0)",
+            "formatString": "#,0",
+            "displayFolder": "经营",
+            "description": "取消订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Cancel_Rate",
+            "expression": "DIVIDE([Canceled_Orders], [All_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "经营",
+            "description": "取消状态占比；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Delivery_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[delivery_eligible] = TRUE()), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "有效配送日期订单；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Late_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[delivery_eligible] = TRUE(), fact_orders[is_late] = TRUE()), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "延迟订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Late_Rate",
+            "expression": "DIVIDE([Late_Orders], [Delivery_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "延迟送达比例；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Review_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[review_eligible] = TRUE()), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "有效评分订单；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Low_Score_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[review_eligible] = TRUE(), fact_orders[review_score] IN {1, 2}), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "低评分订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Low_Score_Rate",
+            "expression": "DIVIDE([Low_Score_Orders], [Review_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "低评分比例；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Joint_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[delivery_eligible] = TRUE(), fact_orders[review_eligible] = TRUE()), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "日期与评分交集订单；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Delivery_Coverage",
+            "expression": "DIVIDE([Delivery_Orders], [Delivered_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "配送日期覆盖；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Review_Coverage",
+            "expression": "DIVIDE([Review_Orders], [Delivered_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "评分覆盖；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Joint_Coverage",
+            "expression": "DIVIDE([Joint_Orders], [Delivered_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "联合覆盖；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Duration_Orders",
+            "expression": "COALESCE(CALCULATE(COUNT(fact_orders[delivery_days]), fact_orders[order_status] = \"delivered\"), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "有效送达时长订单；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Duration_Coverage",
+            "expression": "DIVIDE([Duration_Orders], [Delivered_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "送达时长覆盖；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "P50_Days",
+            "expression": "CALCULATE(PERCENTILE.INC(fact_orders[delivery_days], 0.5), fact_orders[order_status] = \"delivered\", NOT ISBLANK(fact_orders[delivery_days]))",
+            "formatString": "#,0.00",
+            "displayFolder": "履约",
+            "description": "送达时长中位数（天）；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "P90_Days",
+            "expression": "CALCULATE(PERCENTILE.INC(fact_orders[delivery_days], 0.9), fact_orders[order_status] = \"delivered\", NOT ISBLANK(fact_orders[delivery_days]))",
+            "formatString": "#,0.00",
+            "displayFolder": "履约",
+            "description": "送达时长P90（天）；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Group_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[delivery_eligible] = TRUE(), fact_orders[review_eligible] = TRUE()), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "交集样本订单数；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Group_Low_Orders",
+            "expression": "COALESCE(CALCULATE(COUNTROWS(fact_orders), fact_orders[order_status] = \"delivered\", fact_orders[delivery_eligible] = TRUE(), fact_orders[review_eligible] = TRUE(), fact_orders[review_score] IN {1, 2}), 0)",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "Group_Low_Orders；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "Group_Low_Rate",
+            "expression": "DIVIDE([Group_Low_Orders], [Group_Orders])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "交集样本低评分比例；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "State_Investigation_Orders",
+            "expression": "IF([Delivered_Orders] >= 100, [Delivered_Orders])",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "已交付订单（≥100）；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "State_Investigation_Late_Rate",
+            "expression": "IF([Delivered_Orders] >= 100, [Late_Rate])",
+            "formatString": "0.0%",
+            "displayFolder": "履约",
+            "description": "延迟比例（≥100订单）；按日期与州筛选后重新聚合，空分母返回空值。"
+          },
+          {
+            "name": "State_Investigation_Late_Orders",
+            "expression": "IF([Delivered_Orders] >= 100, [Late_Orders])",
+            "formatString": "#,0",
+            "displayFolder": "履约",
+            "description": "延迟订单数（≥100订单）；按日期与州筛选后重新聚合，空分母返回空值。"
+          }
+        ]
+      },
+      {
+        "name": "fact_order_items",
+        "columns": [
+          {
+            "name": "category",
+            "dataType": "string",
+            "sourceColumn": "category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "customer_state",
+            "dataType": "string",
+            "sourceColumn": "customer_state",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "order_status",
+            "dataType": "string",
+            "sourceColumn": "order_status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "purchase_date",
+            "dataType": "dateTime",
+            "sourceColumn": "purchase_date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-MM-dd",
+            "annotations": [
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ]
+          },
+          {
+            "name": "price",
+            "dataType": "decimal",
+            "sourceColumn": "price",
+            "summarizeBy": "none",
+            "formatString": "#,0.00"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_order_items",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"/fact_order_items.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Nulls = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),",
+                "    Typed = Table.TransformColumnTypes(Nulls, {{\"category\", type text}, {\"customer_state\", type text}, {\"order_status\", type text}, {\"purchase_date\", type date}, {\"price\", Currency.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Item_GMV",
+            "expression": "CALCULATE(SUM(fact_order_items[price]), fact_order_items[order_status] = \"delivered\")",
+            "formatString": "#,0.00",
+            "description": "按购买日期／客户州／品类汇总的已交付商品金额，不影响订单级指标。"
+          }
+        ]
+      },
+      {
+        "name": "dim_date",
+        "columns": [
+          {
+            "name": "date",
+            "dataType": "dateTime",
+            "sourceColumn": "date",
+            "summarizeBy": "none",
+            "formatString": "yyyy-MM-dd",
+            "annotations": [
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ]
+          },
+          {
+            "name": "month_start",
+            "dataType": "dateTime",
+            "sourceColumn": "month_start",
+            "summarizeBy": "none",
+            "formatString": "yyyy-MM-dd",
+            "annotations": [
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ]
+          },
+          {
+            "name": "year",
+            "dataType": "int64",
+            "sourceColumn": "year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "quarter",
+            "dataType": "int64",
+            "sourceColumn": "quarter",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "month",
+            "dataType": "int64",
+            "sourceColumn": "month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "month_label",
+            "dataType": "string",
+            "sourceColumn": "month_label",
+            "summarizeBy": "none",
+            "sortByColumn": "month_start"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_date",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"/dim_date.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Nulls = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),",
+                "    Typed = Table.TransformColumnTypes(Nulls, {{\"date\", type date}, {\"month_start\", type date}, {\"year\", Int64.Type}, {\"quarter\", Int64.Type}, {\"month\", Int64.Type}, {\"month_label\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_customer_state",
+        "columns": [
+          {
+            "name": "customer_state",
+            "dataType": "string",
+            "sourceColumn": "customer_state",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_customer_state",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"/dim_customer_state.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Nulls = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),",
+                "    Typed = Table.TransformColumnTypes(Nulls, {{\"customer_state\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_category",
+        "columns": [
+          {
+            "name": "category",
+            "dataType": "string",
+            "sourceColumn": "category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "category_group",
+            "dataType": "string",
+            "sourceColumn": "category_group",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_category",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(DataFolder & \"/dim_category.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Nulls = Table.ReplaceValue(Headers, \"\", null, Replacer.ReplaceValue, Table.ColumnNames(Headers)),",
+                "    Typed = Table.TransformColumnTypes(Nulls, {{\"category\", type text}, {\"category_group\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "fact_orders_dim_date",
+        "fromTable": "fact_orders",
+        "fromColumn": "purchase_date",
+        "toTable": "dim_date",
+        "toColumn": "date",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "fact_orders_dim_customer_state",
+        "fromTable": "fact_orders",
+        "fromColumn": "customer_state",
+        "toTable": "dim_customer_state",
+        "toColumn": "customer_state",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "fact_order_items_dim_date",
+        "fromTable": "fact_order_items",
+        "fromColumn": "purchase_date",
+        "toTable": "dim_date",
+        "toColumn": "date",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "fact_order_items_dim_customer_state",
+        "fromTable": "fact_order_items",
+        "fromColumn": "customer_state",
+        "toTable": "dim_customer_state",
+        "toColumn": "customer_state",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "items_category",
+        "fromTable": "fact_order_items",
+        "fromColumn": "category",
+        "toTable": "dim_category",
+        "toColumn": "category",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection"
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DataFolder",
+        "kind": "m",
+        "expression": "\"C:/PATH/TO/dashboard/data\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DataFolder\", \"fact_orders\", \"fact_order_items\", \"dim_date\", \"dim_customer_state\", \"dim_category\"]"
+      },
+      {
+        "name": "PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      }
+    ]
+  }
+}

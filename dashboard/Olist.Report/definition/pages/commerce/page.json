@@ -1,0 +1,107 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.0.0/schema.json",
+  "name": "commerce",
+  "displayName": "经营概览",
+  "displayOption": "FitToPage",
+  "width": 1280,
+  "height": 800,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F4F7FA'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "annotations": [
+    {
+      "name": "sourceSnapshot",
+      "value": "dff02fc0f46f"
+    }
+  ],
+  "visualInteractions": [
+    {
+      "source": "category_amount",
+      "target": "heading",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "subheading",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "date_filter",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "state_filter",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "kpi_GMV",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "kpi_Delivered_Orders",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "kpi_AOV",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "kpi_Cancel_Rate",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "monthly_GMV",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "monthly_Delivered_Orders",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "monthly_AOV",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "state_amount",
+      "type": "NoFilter"
+    },
+    {
+      "source": "category_amount",
+      "target": "footer",
+      "type": "NoFilter"
+    }
+  ]
+}

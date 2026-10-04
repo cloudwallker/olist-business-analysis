@@ -1,0 +1,125 @@
+{
+  "dataset": {
+    "title": "Brazilian E-Commerce Public Dataset by Olist",
+    "publisher": "Olist",
+    "owner_ref": "olistbr",
+    "dataset_url": "https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce",
+    "download_endpoint": "https://www.kaggle.com/api/v1/datasets/download/olistbr/brazilian-ecommerce",
+    "current_version_number_reported_by_api": 2,
+    "last_updated_reported_by_api": "2021-10-01T19:08:27.97Z"
+  },
+  "downloaded_at_utc": "2026-10-04T14:37:21+00:00",
+  "archive": {
+    "sha256": "967e41e04fc306fe604e2a693f488995a8b41e5047418f8a5c8e4abd6deca784",
+    "bytes": 44717580
+  },
+  "license": {
+    "name": "CC BY-NC-SA 4.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "attribution": "Olist, Brazilian E-Commerce Public Dataset by Olist, https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce",
+    "raw_modifications": "None. Seven original CSV entries were extracted verbatim from the original nine-file ZIP. UTF-8 BOM in translation CSV is preserved."
+  },
+  "analysis_config": {
+    "analysis_start": "2017-02-01",
+    "analysis_end": "2018-07-31",
+    "observation_end": "2018-07-31 23:59:59",
+    "min_state_orders": 100,
+    "min_group_orders": 30
+  },
+  "source_fingerprint": "7a62574c036cfc583f5366dd39922523f49ce4a7172d617ba05e0017b87064f1",
+  "files": [
+    {
+      "filename": "olist_orders_dataset.csv",
+      "sha256": "8df58ef3d2d7e9944010f7beecd9b75367f5588ec6e3c91cec19ae3345ef9ecf",
+      "rows": 99441,
+      "columns": [
+        "order_id",
+        "customer_id",
+        "order_status",
+        "order_purchase_timestamp",
+        "order_approved_at",
+        "order_delivered_carrier_date",
+        "order_delivered_customer_date",
+        "order_estimated_delivery_date"
+      ]
+    },
+    {
+      "filename": "olist_order_items_dataset.csv",
+      "sha256": "0bc4d068c4fe38cbb01bd90e8746e3c613fe7b4baef75fab7b0e329701c3e279",
+      "rows": 112650,
+      "columns": [
+        "order_id",
+        "order_item_id",
+        "product_id",
+        "seller_id",
+        "shipping_limit_date",
+        "price",
+        "freight_value"
+      ]
+    },
+    {
+      "filename": "olist_order_payments_dataset.csv",
+      "sha256": "4f713964f2815dbbaa40b9488268c55aac3627bfce5aa96cf58d1f3616de3cc0",
+      "rows": 103886,
+      "columns": [
+        "order_id",
+        "payment_sequential",
+        "payment_type",
+        "payment_installments",
+        "payment_value"
+      ]
+    },
+    {
+      "filename": "olist_customers_dataset.csv",
+      "sha256": "983a422239e1712ded753b3bf9ecf47dc73f144d306029dcfa99e70a226883d2",
+      "rows": 99441,
+      "columns": [
+        "customer_id",
+        "customer_unique_id",
+        "customer_zip_code_prefix",
+        "customer_city",
+        "customer_state"
+      ]
+    },
+    {
+      "filename": "olist_products_dataset.csv",
+      "sha256": "3e6569628a17fbc75fd206ee357b59e20364b9afa90f5b6cd5b4d624c58aa9cc",
+      "rows": 32951,
+      "columns": [
+        "product_id",
+        "product_category_name",
+        "product_name_lenght",
+        "product_description_lenght",
+        "product_photos_qty",
+        "product_weight_g",
+        "product_length_cm",
+        "product_height_cm",
+        "product_width_cm"
+      ]
+    },
+    {
+      "filename": "olist_order_reviews_dataset.csv",
+      "sha256": "012b61c7593e34f51fa614efdf802b9c7056ce6aae5307ddb93236e7cfc797d7",
+      "rows": 99224,
+      "columns": [
+        "review_id",
+        "order_id",
+        "review_score",
+        "review_comment_title",
+        "review_comment_message",
+        "review_creation_date",
+        "review_answer_timestamp"
+      ]
+    },
+    {
+      "filename": "product_category_name_translation.csv",
+      "sha256": "a81f0d1f27b27e7293f761bc79e3ce8f348ee39c4b3ed3e49bde38f478586278",
+      "rows": 71,
+      "columns": [
+        "product_category_name",
+        "product_category_name_english"
+      ]
+    }
+  ],
+  "currency": "unverified_source_units"
+}

@@ -1,0 +1,5 @@
+analysis_start: '2017-02-01'
+analysis_end: '2018-07-31'
+observation_end: '2018-07-31 23:59:59'
+min_state_orders: 100
+min_group_orders: 30
