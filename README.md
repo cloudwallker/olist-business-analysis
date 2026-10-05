@@ -2,7 +2,7 @@
 
 ### Reproducible commerce and delivery analysis with SQL and Power BI
 
-**Trace business questions through explicit metric definitions, ten SQL analyses, quality checks and an editable two-page Power BI project.** The project uses Olist's historical public data and distinguishes observed associations from causal claims.
+**Analyze Olist's historical commerce trends, delivery performance and 30-day repeat purchasing through ten SQL analyses, explicit metrics, quality checks and an editable two-page Power BI project.** Findings describe observed patterns and associations.
 
 English | [中文](README_ZH.md)
 
@@ -10,7 +10,7 @@ English | [中文](README_ZH.md)
 
 ![Monthly merchandise amount and delivered orders](reports/images/commerce-trend.png)
 
-*Actual SQL analysis output, in source currency units. This chart is an analysis figure, not a Power BI screenshot.*
+*Monthly commerce chart generated from SQL analysis output, in source amount units.*
 
 ## What is implemented
 
@@ -20,7 +20,7 @@ English | [中文](README_ZH.md)
 - Anonymous dashboard exports, explicit DAX denominators, and an editable PBIP/PBIR project validated against Microsoft's JSON schemas.
 - Offline synthetic business tests and an official-source download pinned by SHA-256.
 
-**Verification:** offline business tests, blocking SQL quality checks, exported amount reconciliation, and Microsoft PBIR JSON schema checks have passed. Desktop refresh, actual DAX comparison and PBIX/PDF snapshots are excluded from this delivery. The editable Power BI project is provided with these runtime checks unperformed. See the [validation record](docs/validation.md).
+**Verification:** offline business tests, blocking SQL quality checks, exported amount reconciliation and Microsoft PBIR JSON schema checks have passed. Desktop refresh, actual DAX comparison and PBIX/PDF export remain pending. See the [validation record](docs/validation.md).
 
 ## Actual data snapshot
 
@@ -34,7 +34,7 @@ The official source contains 99,441 orders and 112,650 items. The analysis windo
 | Late deliveries / eligible delivery dates | 6,116 / 89,102 (6.86%) |
 | Valid ratings / delivered orders | 88,497 / 89,110 (99.31%) |
 
-Amounts are not revenue or profit. The source metadata used here does not explicitly confirm currency, so the report does not label amounts as BRL. No refund transactions or browsing exposure are available; refund rates and conversion funnels are not fabricated. See [findings and limitations](reports/analysis-summary.md).
+Amounts measure delivered merchandise value excluding freight. Revenue and profit require additional accounting data. Currency remains unconfirmed in the checked source metadata, so amounts use source units. Refund-rate and conversion-funnel analysis require refund transactions and browsing exposure, which are absent from the source. See [findings and limitations](reports/analysis-summary.md).
 
 ## Quick start
 
