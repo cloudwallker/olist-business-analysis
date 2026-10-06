@@ -3,11 +3,11 @@
   "name": "monthly_GMV",
   "position": {
     "x": 28,
-    "y": 308,
+    "y": 390,
     "width": 604,
-    "height": 204,
+    "height": 240,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 8
   },
   "visual": {
     "visualType": "lineChart",
@@ -32,7 +32,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "14D"
                 }
               }
             },
@@ -106,7 +106,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E0E8EF'"
+                      "Value": "'#CBD5E1'"
                     }
                   }
                 }
@@ -115,7 +115,20 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'月度已交付商品金额'"
                 }
               }
             }

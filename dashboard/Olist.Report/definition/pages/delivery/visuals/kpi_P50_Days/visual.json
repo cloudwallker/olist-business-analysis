@@ -3,11 +3,11 @@
   "name": "kpi_P50_Days",
   "position": {
     "x": 338,
-    "y": 184,
+    "y": 242,
     "width": 294,
-    "height": 104,
+    "height": 124,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 5
   },
   "visual": {
     "visualType": "card",
@@ -32,7 +32,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "14D"
                 }
               }
             },
@@ -106,7 +106,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E0E8EF'"
+                      "Value": "'#CBD5E1'"
                     }
                   }
                 }
@@ -115,7 +115,20 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'送达时长中位数（天）'"
                 }
               }
             }
@@ -153,7 +166,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "28D"
+                  "Value": "32D"
                 }
               }
             },
@@ -162,7 +175,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#176B91'"
+                      "Value": "'#1E40AF'"
                     }
                   }
                 }

@@ -6,6 +6,24 @@
       "name": "CY24SU06",
       "reportVersionAtImport": "5.55",
       "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "OlistFocus-c0a61e42.json",
+      "reportVersionAtImport": "5.55",
+      "type": "RegisteredResources"
     }
-  }
+  },
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "OlistFocus-c0a61e42.json",
+          "path": "OlistFocus-c0a61e42.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ]
 }

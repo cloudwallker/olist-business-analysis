@@ -2,9 +2,9 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.0.0/schema.json",
   "name": "commerce",
   "displayName": "经营概览",
-  "displayOption": "FitToPage",
+  "displayOption": "FitToWidth",
   "width": 1280,
-  "height": 800,
+  "height": 1008,
   "objects": {
     "background": [
       {

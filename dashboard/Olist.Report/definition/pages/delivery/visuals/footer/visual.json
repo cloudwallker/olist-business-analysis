@@ -3,11 +3,11 @@
   "name": "footer",
   "position": {
     "x": 28,
-    "y": 750,
+    "y": 924,
     "width": 1224,
-    "height": 38,
+    "height": 64,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 14
   },
   "visual": {
     "visualType": "textbox",
@@ -37,8 +37,8 @@
                     "value": "同预计日送达算准时；缺日期退出物流分母。低评分=1/2分。组间比较仅日期与评分交集；任组<30不作重点判断，关系不表示因果。",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10pt",
-                      "color": "#536B7A"
+                      "fontSize": "13pt",
+                      "color": "#475569"
                     }
                   }
                 ]

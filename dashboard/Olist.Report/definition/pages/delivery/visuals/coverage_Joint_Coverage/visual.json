@@ -3,11 +3,11 @@
   "name": "coverage_Joint_Coverage",
   "position": {
     "x": 856,
-    "y": 308,
+    "y": 390,
     "width": 396,
-    "height": 76,
+    "height": 100,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 10
   },
   "visual": {
     "visualType": "card",
@@ -32,7 +32,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "14D"
                 }
               }
             },
@@ -106,7 +106,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E0E8EF'"
+                      "Value": "'#CBD5E1'"
                     }
                   }
                 }
@@ -115,7 +115,20 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'联合覆盖'"
                 }
               }
             }
@@ -153,7 +166,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "28D"
+                  "Value": "32D"
                 }
               }
             },
@@ -162,7 +175,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#176B91'"
+                      "Value": "'#1E40AF'"
                     }
                   }
                 }

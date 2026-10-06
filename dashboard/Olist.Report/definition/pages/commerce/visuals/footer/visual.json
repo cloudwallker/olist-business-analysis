@@ -3,11 +3,11 @@
   "name": "footer",
   "position": {
     "x": 28,
-    "y": 750,
+    "y": 924,
     "width": 1224,
-    "height": 38,
+    "height": 64,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 13
   },
   "visual": {
     "visualType": "textbox",
@@ -37,8 +37,8 @@
                     "value": "商品金额不含运费；按最终delivered状态及购买日统计。取消状态占比不是退款率。品类点击仅查看金额构成。",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10pt",
-                      "color": "#536B7A"
+                      "fontSize": "13pt",
+                      "color": "#475569"
                     }
                   }
                 ]

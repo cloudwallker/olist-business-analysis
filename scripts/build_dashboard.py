@@ -235,17 +235,17 @@ def projection(table, column, measure=False):
 
 
 def visual(name, kind, title, x, y, width, height, roles=None, sort=None):
-    config = {"visualType": kind, "visualContainerObjects": {"title": [{"properties": {"show": expr(True), "text": expr(title), "fontSize": expr(12), "fontColor": expr("#19384E"), "fontFamily": expr("Segoe UI"), "bold": expr(True)}}], "background": [{"properties": {"show": expr(True), "color": {"solid": {"color": expr("#FFFFFF")}}, "transparency": expr(0)}}], "border": [{"properties": {"show": expr(True), "color": {"solid": {"color": expr("#E0E8EF")}}, "radius": expr(8)}}]}}
+    config = {"visualType": kind, "visualContainerObjects": {"title": [{"properties": {"show": expr(True), "text": expr(title), "fontSize": expr(14), "fontColor": expr("#19384E"), "fontFamily": expr("Segoe UI"), "bold": expr(True)}}], "background": [{"properties": {"show": expr(True), "color": {"solid": {"color": expr("#FFFFFF")}}, "transparency": expr(0)}}], "border": [{"properties": {"show": expr(True), "color": {"solid": {"color": expr("#CBD5E1")}}, "radius": expr(10)}}], "general": [{"properties": {"altText": expr(title)}}]}}
     if roles:
         config["query"] = {"queryState": {role: {"projections": values} for role, values in roles.items()}}
         if sort:
             config["query"]["sortDefinition"] = {"sort": [{"field": sort[0], "direction": sort[1]}], "isDefaultSort": False}
     if kind == "card":
-        config["objects"] = {"labels": [{"properties": {"fontSize": expr(28), "color": {"solid": {"color": expr("#176B91")}}}}], "categoryLabels": [{"properties": {"show": expr(False)}}]}
+        config["objects"] = {"labels": [{"properties": {"fontSize": expr(32), "color": {"solid": {"color": expr("#1E40AF")}}}}], "categoryLabels": [{"properties": {"show": expr(False)}}]}
     return {"$schema": SCHEMA + "fabric/item/report/definition/visualContainer/1.0.0/schema.json", "name": name, "position": {"x": x, "y": y, "width": width, "height": height, "z": 0, "tabOrder": 0}, "visual": config}
 
 
-def text_visual(name, text, x, y, width, height, size=12, color="#536B7A"):
+def text_visual(name, text, x, y, width, height, size=14, color="#475569"):
     v = visual(name, "textbox", "", x, y, width, height)
     v["visual"]["visualContainerObjects"] = {"title": [{"properties": {"show": expr(False)}}]}
     v["visual"]["objects"] = {"general": [{"properties": {"paragraphs": [{"textRuns": [{"value": text, "textStyle": {"fontFamily": "Segoe UI", "fontSize": "%spt" % size, "color": color}}]}]}}]}
@@ -255,32 +255,35 @@ def text_visual(name, text, x, y, width, height, size=12, color="#536B7A"):
 def report_pages(source_snapshot="unmarked"):
     result = {}
     for page, heading in [("commerce", "Olist 经营概览"), ("delivery", "Olist 履约诊断")]:
-        v = [text_visual("heading", heading, 28, 14, 1224, 42, 25, "#19384E"), text_visual("subheading", "购买窗口 2017-02-01 — 2018-07-31 · CSV快照 " + source_snapshot + " · 金额为源货币单位（币种未核验）", 28, 60, 1224, 30, 11)]
-        v.append(visual("date_filter", "slicer", "购买日期", 28, 98, 704, 70, {"Values": [projection("dim_date", "date")]}))
+        snapshot_label = source_snapshot if len(source_snapshot) <= 24 else source_snapshot[:24] + "…"
+        v = [text_visual("heading", heading, 28, 18, 1224, 48, 30, "#19384E"), text_visual("subheading", "2017-02-01 — 2018-07-31 · 快照 " + snapshot_label + " · 金额为源单位（币种未核验）", 28, 74, 1224, 44, 13)]
+        v.append(visual("date_filter", "slicer", "购买日期 · 两页同步", 28, 134, 704, 88, {"Values": [projection("dim_date", "date")]}))
         v[-1]["visual"]["objects"] = {"data": [{"properties": {"mode": expr("Between")}}]}
         v[-1]["visual"]["syncGroup"] = {"groupName": "PurchaseDate", "fieldChanges": True, "filterChanges": True}
-        v.append(visual("state_filter", "slicer", "客户收货州", 748, 98, 504, 70, {"Values": [projection("dim_customer_state", "customer_state")]}))
+        v.append(visual("state_filter", "slicer", "客户收货州 · 两页同步", 748, 134, 504, 88, {"Values": [projection("dim_customer_state", "customer_state")]}))
         v[-1]["visual"]["objects"] = {"data": [{"properties": {"mode": expr("Dropdown")}}]}
         v[-1]["visual"]["syncGroup"] = {"groupName": "CustomerState", "fieldChanges": True, "filterChanges": True}
         card_measures = ["GMV", "Delivered_Orders", "AOV", "Cancel_Rate"] if page == "commerce" else ["Late_Rate", "P50_Days", "P90_Days", "Low_Score_Rate"]
         for index, name in enumerate(card_measures):
             title = LABELS[name] + ("（源币单位）" if name in ("GMV", "AOV") else "")
-            v.append(visual("kpi_" + name, "card", title, 28 + index * 310, 184, 294, 104, {"Values": [projection("fact_orders", name, True)]}))
+            v.append(visual("kpi_" + name, "card", title, 28 + index * 310, 242, 294, 124, {"Values": [projection("fact_orders", name, True)]}))
         if page == "commerce":
             for name, x, width in [("GMV", 28, 604), ("Delivered_Orders", 648, 294), ("AOV", 958, 294)]:
-                v.append(visual("monthly_" + name, "lineChart", "月度" + LABELS[name], x, 308, width, 204, {"Category": [projection("dim_date", "month_label")], "Y": [projection("fact_orders", name, True)]}, (field("dim_date", "month_label"), "Ascending")))
-            v.append(visual("category_amount", "barChart", "全窗口Top10品类 + 其他 · 商品金额构成", 28, 532, 604, 208, {"Category": [projection("dim_category", "category_group")], "Y": [projection("fact_order_items", "Item_GMV", True)]}, (field("fact_order_items", "Item_GMV", True), "Descending")))
-            v.append(visual("state_amount", "barChart", "客户州 · 已交付商品金额", 648, 532, 604, 208, {"Category": [projection("dim_customer_state", "customer_state")], "Y": [projection("fact_orders", "GMV", True)]}, (field("fact_orders", "GMV", True), "Descending")))
+                v.append(visual("monthly_" + name, "lineChart", "月度" + LABELS[name], x, 390, width, 240, {"Category": [projection("dim_date", "month_label")], "Y": [projection("fact_orders", name, True)]}, (field("dim_date", "month_label"), "Ascending")))
+            v.append(visual("category_amount", "barChart", "Top10品类 + 其他 · 商品金额构成", 28, 654, 604, 248, {"Category": [projection("dim_category", "category_group")], "Y": [projection("fact_order_items", "Item_GMV", True)]}, (field("fact_order_items", "Item_GMV", True), "Descending")))
+            v.append(visual("state_amount", "barChart", "客户州 · 已交付商品金额", 648, 654, 604, 248, {"Category": [projection("dim_customer_state", "customer_state")], "Y": [projection("fact_orders", "GMV", True)]}, (field("fact_orders", "GMV", True), "Descending")))
             footer = "商品金额不含运费；按最终delivered状态及购买日统计。取消状态占比不是退款率。品类点击仅查看金额构成。"
         else:
             for index, name in enumerate(["Delivery_Coverage", "Review_Coverage", "Joint_Coverage"]):
-                v.append(visual("coverage_" + name, "card", LABELS[name], 28 + index * 414, 308, 396, 76, {"Values": [projection("fact_orders", name, True)]}))
-            v.append(visual("state_scatter", "scatterChart", "州调查 · 订单规模 × 延迟比例（≥100订单）", 28, 404, 604, 314, {"Category": [projection("dim_customer_state", "customer_state")], "X": [projection("fact_orders", "State_Investigation_Orders", True)], "Y": [projection("fact_orders", "State_Investigation_Late_Rate", True)], "Size": [projection("fact_orders", "State_Investigation_Late_Orders", True)], "Tooltips": [projection("fact_orders", n, True) for n in ("Delivery_Orders", "Late_Orders", "Low_Score_Rate", "Joint_Coverage")]}))
-            v.append(visual("on_time_late", "clusteredColumnChart", "准时／延迟 · 交集样本低评分", 648, 404, 294, 314, {"Category": [projection("fact_orders", "delay_group")], "Y": [projection("fact_orders", "Group_Low_Rate", True)], "Tooltips": [projection("fact_orders", "Group_Orders", True)]}))
-            v.append(visual("monthly_late", "lineChart", "按购买月份的延迟比例", 958, 404, 294, 314, {"Category": [projection("dim_date", "month_label")], "Y": [projection("fact_orders", "Late_Rate", True)]}, (field("dim_date", "month_label"), "Ascending")))
+                v.append(visual("coverage_" + name, "card", LABELS[name], 28 + index * 414, 390, 396, 100, {"Values": [projection("fact_orders", name, True)]}))
+            v.append(visual("state_scatter", "scatterChart", "州调查 · 订单规模 × 延迟比例（≥100订单）", 28, 514, 604, 388, {"Category": [projection("dim_customer_state", "customer_state")], "X": [projection("fact_orders", "State_Investigation_Orders", True)], "Y": [projection("fact_orders", "State_Investigation_Late_Rate", True)], "Size": [projection("fact_orders", "State_Investigation_Late_Orders", True)], "Tooltips": [projection("fact_orders", n, True) for n in ("Delivery_Orders", "Late_Orders", "Low_Score_Rate", "Joint_Coverage")]}))
+            v.append(visual("on_time_late", "clusteredColumnChart", "准时／延迟 · 交集样本低评分", 648, 514, 294, 388, {"Category": [projection("fact_orders", "delay_group")], "Y": [projection("fact_orders", "Group_Low_Rate", True)], "Tooltips": [projection("fact_orders", "Group_Orders", True)]}))
+            v.append(visual("monthly_late", "lineChart", "按购买月份的延迟比例", 958, 514, 294, 388, {"Category": [projection("dim_date", "month_label")], "Y": [projection("fact_orders", "Late_Rate", True)]}, (field("dim_date", "month_label"), "Ascending")))
             footer = "同预计日送达算准时；缺日期退出物流分母。低评分=1/2分。组间比较仅日期与评分交集；任组<30不作重点判断，关系不表示因果。"
-        v.append(text_visual("footer", footer, 28, 750, 1224, 38, 10))
-        page_doc = {"$schema": SCHEMA + "fabric/item/report/definition/page/1.0.0/schema.json", "name": page, "displayName": "经营概览" if page == "commerce" else "履约诊断", "displayOption": "FitToPage", "width": 1280, "height": 800, "objects": {"background": [{"properties": {"color": {"solid": {"color": expr("#F4F7FA")}}, "transparency": expr(0)}}]}, "annotations": [{"name": "sourceSnapshot", "value": source_snapshot}]}
+        v.append(text_visual("footer", footer, 28, 924, 1224, 64, 13))
+        for index, item in enumerate(v):
+            item["position"]["tabOrder"] = index
+        page_doc = {"$schema": SCHEMA + "fabric/item/report/definition/page/1.0.0/schema.json", "name": page, "displayName": "经营概览" if page == "commerce" else "履约诊断", "displayOption": "FitToWidth", "width": 1280, "height": 1008, "objects": {"background": [{"properties": {"color": {"solid": {"color": expr("#F4F7FA")}}, "transparency": expr(0)}}]}, "annotations": [{"name": "sourceSnapshot", "value": source_snapshot}]}
         if page == "commerce":
             page_doc["visualInteractions"] = [{"source": "category_amount", "target": item["name"], "type": "NoFilter"} for item in v if item["name"] != "category_amount"]
         result[page] = (page_doc, v)
@@ -337,6 +340,38 @@ FROM counts;
         (out / "reconciliation" / (name + ".sql")).write_text(sql, encoding="utf-8")
 
 
+THEME_FILENAME = "OlistFocus-c0a61e42.json"
+
+
+def report_theme():
+    """Native Power BI theme; formatting only, with no data or model changes."""
+    return {
+        "name": THEME_FILENAME,
+        "dataColors": ["#1E40AF", "#0F766E", "#B45309", "#7E22CE", "#475569", "#B91C1C"],
+        "background": "#FFFFFF", "foreground": "#19384E", "tableAccent": "#1E40AF",
+        "good": "#0F766E", "neutral": "#B45309", "bad": "#B91C1C",
+        "textClasses": {
+            "label": {"fontFace": "Segoe UI", "fontSize": 13, "color": "#475569"},
+            "title": {"fontFace": "Segoe UI", "fontSize": 16, "color": "#19384E"},
+            "header": {"fontFace": "Segoe UI", "fontSize": 14, "color": "#19384E"},
+            "callout": {"fontFace": "Segoe UI", "fontSize": 32, "color": "#1E40AF"},
+        },
+    }
+
+
+def report_configuration():
+    return {
+        "$schema": SCHEMA + "fabric/item/report/definition/report/1.0.0/schema.json",
+        "layoutOptimization": "None",
+        "themeCollection": {
+            "baseTheme": {"name": "CY24SU06", "reportVersionAtImport": "5.55", "type": "SharedResources"},
+            "customTheme": {"name": THEME_FILENAME, "reportVersionAtImport": "5.55", "type": "RegisteredResources"},
+        },
+        "resourcePackages": [{"name": "RegisteredResources", "type": "RegisteredResources",
+                              "items": [{"name": THEME_FILENAME, "path": THEME_FILENAME, "type": "CustomTheme"}]}],
+    }
+
+
 def build_dashboard(run_dir, output_dir, data_folder=None):
     run_dir, output_dir = Path(run_dir), Path(output_dir)
     exports = load_exports(run_dir)
@@ -361,7 +396,8 @@ def build_dashboard(run_dir, output_dir, data_folder=None):
     write_json(report_dir / "definition.pbir", {"$schema": SCHEMA + "fabric/item/report/definitionProperties/2.0.0/schema.json", "version": "4.0", "datasetReference": {"byPath": {"path": "../Olist.SemanticModel"}}})
     definition = report_dir / "definition"
     write_json(definition / "version.json", {"$schema": SCHEMA + "fabric/item/report/definition/versionMetadata/1.0.0/schema.json", "version": "2.0.0"})
-    write_json(definition / "report.json", {"$schema": SCHEMA + "fabric/item/report/definition/report/1.0.0/schema.json", "layoutOptimization": "None", "themeCollection": {"baseTheme": {"name": "CY24SU06", "reportVersionAtImport": "5.55", "type": "SharedResources"}}})
+    write_json(definition / "report.json", report_configuration())
+    write_json(report_dir / "StaticResources" / "RegisteredResources" / THEME_FILENAME, report_theme())
     write_json(definition / "pages" / "pages.json", {"$schema": SCHEMA + "fabric/item/report/definition/pagesMetadata/1.0.0/schema.json", "pageOrder": ["commerce", "delivery"], "activePageName": "commerce"})
     for page, (document, visuals) in report_pages(source_snapshot).items():
         write_json(definition / "pages" / page / "page.json", document)

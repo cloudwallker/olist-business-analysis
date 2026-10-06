@@ -3,11 +3,11 @@
   "name": "subheading",
   "position": {
     "x": 28,
-    "y": 60,
+    "y": 74,
     "width": 1224,
-    "height": 30,
+    "height": 44,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 1
   },
   "visual": {
     "visualType": "textbox",
@@ -34,11 +34,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "购买窗口 2017-02-01 — 2018-07-31 · CSV快照 dff02fc0f46f · 金额为源货币单位（币种未核验）",
+                    "value": "2017-02-01 — 2018-07-31 · 快照 dff02fc0f46f · 金额为源单位（币种未核验）",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
-                      "color": "#536B7A"
+                      "fontSize": "13pt",
+                      "color": "#475569"
                     }
                   }
                 ]

@@ -1,0 +1,39 @@
+{
+  "name": "OlistFocus-c0a61e42.json",
+  "dataColors": [
+    "#1E40AF",
+    "#0F766E",
+    "#B45309",
+    "#7E22CE",
+    "#475569",
+    "#B91C1C"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#19384E",
+  "tableAccent": "#1E40AF",
+  "good": "#0F766E",
+  "neutral": "#B45309",
+  "bad": "#B91C1C",
+  "textClasses": {
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 13,
+      "color": "#475569"
+    },
+    "title": {
+      "fontFace": "Segoe UI",
+      "fontSize": 16,
+      "color": "#19384E"
+    },
+    "header": {
+      "fontFace": "Segoe UI",
+      "fontSize": 14,
+      "color": "#19384E"
+    },
+    "callout": {
+      "fontFace": "Segoe UI",
+      "fontSize": 32,
+      "color": "#1E40AF"
+    }
+  }
+}

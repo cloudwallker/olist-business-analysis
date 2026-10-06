@@ -3,11 +3,11 @@
   "name": "date_filter",
   "position": {
     "x": 28,
-    "y": 98,
+    "y": 134,
     "width": 704,
-    "height": 70,
+    "height": 88,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 2
   },
   "visual": {
     "visualType": "slicer",
@@ -25,14 +25,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'购买日期'"
+                  "Value": "'购买日期 · 两页同步'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "14D"
                 }
               }
             },
@@ -106,7 +106,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E0E8EF'"
+                      "Value": "'#CBD5E1'"
                     }
                   }
                 }
@@ -115,7 +115,20 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'购买日期 · 两页同步'"
                 }
               }
             }

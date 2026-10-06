@@ -3,9 +3,9 @@
   "name": "heading",
   "position": {
     "x": 28,
-    "y": 14,
+    "y": 18,
     "width": 1224,
-    "height": 42,
+    "height": 48,
     "z": 0,
     "tabOrder": 0
   },
@@ -37,7 +37,7 @@
                     "value": "Olist 履约诊断",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "25pt",
+                      "fontSize": "30pt",
                       "color": "#19384E"
                     }
                   }

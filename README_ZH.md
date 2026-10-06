@@ -1,5 +1,9 @@
 # Olist 经营与履约分析
 
+中文简介：可复现的 Olist 经营与履约分析，交付真实使用的两页 Power BI 工程。统一主题、可读图表字号、键盘顺序和同步筛选，保留数据模型、指标口径与来源署名。
+
+English summary: Reproducible Olist commerce and delivery analysis with an editable two-page Power BI project, a registered visual theme, readable chart labels, ordered keyboard navigation and synchronized filters.
+
 ### 用 SQL 和 Power BI 串起业务问题、指标与分析证据
 
 **基于 Olist 公开历史数据，通过 10 组 SQL 分析研究经营趋势、履约表现与 30 天复购，提供明确指标、质量检查和可编辑的双页 Power BI 工程。** 结论描述观测到的规律与关联。

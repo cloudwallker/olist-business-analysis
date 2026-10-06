@@ -3,11 +3,11 @@
   "name": "category_amount",
   "position": {
     "x": 28,
-    "y": 532,
+    "y": 654,
     "width": 604,
-    "height": 208,
+    "height": 248,
     "z": 0,
-    "tabOrder": 0
+    "tabOrder": 11
   },
   "visual": {
     "visualType": "barChart",
@@ -25,14 +25,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'全窗口Top10品类 + 其他 · 商品金额构成'"
+                  "Value": "'Top10品类 + 其他 · 商品金额构成'"
                 }
               }
             },
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "14D"
                 }
               }
             },
@@ -106,7 +106,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#E0E8EF'"
+                      "Value": "'#CBD5E1'"
                     }
                   }
                 }
@@ -115,7 +115,20 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "8D"
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top10品类 + 其他 · 商品金额构成'"
                 }
               }
             }
